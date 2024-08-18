@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+        .container {
+            display: flex;
+            gap: 1cm;
+        }
+        .section {
+            flex: 1;
+        }
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        .card {
+            background-color: #f9f9f9;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1cm;
+        }
+        .search-bar {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1cm;
+        }
+        .search-bar input {
+            flex: 1;
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 0.5rem;
+        }
+        .search-bar button {
+            padding: 0.5rem 1rem;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+        }
+    </style>
+    <script src="answer.js" defer></script>
+</head>
+
+<body class="bg-gray-100 p-6">
+    <div class="max-w-7xl mx-auto bg-white p-6 rounded-lg shadow-lg">
+        <h1 class="text-2xl font-bold mb-6">제목</h1>
+        <div class="grid grid-cols-3 gap-6">
+			<div id="serviceNames"></div>
+			<div id="newestService"></div>
+            <div>
+                <h2 class="text-xl font-semibold mb-4">filteredServicesName => 🦮산책하기</h2>
+				<!-- <div class="search-bar">
+					<input type="text" id="filteredServicesNameSerch" placeholder="검색창">
+					<button onclick="getfilteredServicesNameInputValue()">검색</button>
+				</div> -->
+                <div id="filteredServicesName"></div>
+            </div>
+        </div>
+        <div class="mt-6">
+            <h2 class="text-xl font-semibold mb-4">filteredServicesKeyword => 줍니다.</h2>
+            <div id="filteredServicesKeyword"></div>
+        </div>
+        <div class="mt-6">
+            <h2 class="text-xl font-semibold mb-4">visitingServices</h2>
+            <div class="grid grid-cols-1 gap-4">
+				<div id="visitingServices"></div>
+            </div>
+        </div>
+    </div>
+	
+</body>
+</html>
