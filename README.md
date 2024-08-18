@@ -59,7 +59,7 @@ _팀 케어기버에 합류하게 되신 초급 개발자 분들을 위한 학�
 #### 10. [얄코] 제대로 파는 자바스크립트(JavaScript)
 
 - https://youtu.be/8kmtCVgqM34
-- 코드리뷰용 과제: `jobs/1-10/README.md` 참고
+- 코드리뷰용 과제: [jobs/1-10/README.md](jobs/1-10/README.md) 참고
 
 <br/>
 (실습)
@@ -85,7 +85,7 @@ _팀 케어기버에 합류하게 되신 초급 개발자 분들을 위한 학�
 #### 10. [노마드코더] 왕초보를 위한 React Native 101
 
 - https://nomadcoders.co/react-native-for-beginners
-- 코드리뷰용 과제: _제공 예정…_
+- 코드리뷰용 과제: [jobs/2-10/README.md](jobs/2-10/README.md) 참고
 
 ## ⚛ React
 

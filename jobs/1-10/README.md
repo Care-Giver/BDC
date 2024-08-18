@@ -1,6 +1,7 @@
-> Created At 2024-05-20
-
-> Author: @smnchoi
+```
+createdAt: 2024-05-20
+author: @smnchoi
+```
 
 # 과제 설명
 
