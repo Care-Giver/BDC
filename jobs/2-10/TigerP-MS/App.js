@@ -2,6 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
 import { Alert, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import RadioGroup from 'react-native-radio-buttons-group';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const REGEX_KOREAN = /^[가-힣]+$/;
 const REGEX_NUMBER = /^[0-9]+$/;
@@ -50,7 +51,7 @@ export default function App() {
 			else 
 				break;
 		}
-		
+
 		setState(newState);
 	}
 
@@ -76,7 +77,6 @@ export default function App() {
 		{
 			setBreedVaild(false);
 			setPetInfo(prevInfo => ({ ...prevInfo, breed: "" }));
-			
 			return;
 		}
 		
@@ -86,7 +86,6 @@ export default function App() {
 		if (name.length > 10 || name === "" || !REGEX_KOREAN.test(name)) {
 			setNameValid(false);
 			setPetInfo(prevInfo => ({ ...prevInfo, name: "" }));
-			
 			return;
 		}
 		setNameValid(true);
@@ -112,7 +111,6 @@ export default function App() {
 		{
 			setBrithdayVaild(false);
 			setPetInfo(prevInfo => ({...prevInfo, birthday: ""}));
-			
 			return;
 		}
 		const birth = birthday.replace(/(\d{4})(\d{2})(\d{2})/g, '$1-$2-$3');
@@ -127,7 +125,6 @@ export default function App() {
 		{
 			setBreedVaild(false);
 			setPetInfo(prevInfo => ({ ...prevInfo, breed: "" }));
-			
 			return;
 		}
 		setBreedVaild(true);
@@ -154,7 +151,6 @@ export default function App() {
 		{
 			setWeightVaild(false);
 			setPetInfo(prevInfo => ({ ...prevInfo, weight: -1 }));
-			
 			return;
 		}
 		setWeightVaild(true);
@@ -199,6 +195,9 @@ export default function App() {
 	return (
 		<View style={styles.container}>
 			<View style={styles.titleContainer}>
+				<TouchableOpacity style={{ marginRight: 10 }}>
+					<Icon name="chevron-back" size={30} color="black" />
+				</TouchableOpacity>
 				<Text style={styles.title}>
 					반려동물 등록
 				</Text>
@@ -380,8 +379,9 @@ const styles = StyleSheet.create({
 		backgroundColor: 'white',
 	},
 	titleContainer: {
-		marginTop: 40,
-		marginBottom: 20,
+		flexDirection: "row",
+		marginTop: 50,
+		marginBottom: 30,
 	},
 	title: {
 		fontSize: 20,
