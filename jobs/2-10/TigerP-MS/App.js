@@ -117,7 +117,6 @@ export default function App() {
 		setBrithdayVaild(true);
 		setBirthday(birth);
 		setPetInfo(prevInfo => ({...prevInfo, birthday: birth }));
-		
 	};
 
 	const checkPetBreed = () => {
@@ -191,7 +190,6 @@ export default function App() {
 		);
 	};
 
-	console.log(petInfo);
 	return (
 		<View style={styles.container}>
 			<View style={styles.titleContainer}>
