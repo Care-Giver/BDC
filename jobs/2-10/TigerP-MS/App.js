@@ -7,26 +7,61 @@ import Icon from 'react-native-vector-icons/Ionicons';
 const REGEX_KOREAN = /^[가-힣]+$/;
 const REGEX_NUMBER = /^[0-9]+$/;
 
+const PET_TYPE = {
+	DOG: 1,
+	CAT: 2,
+};
+
+const GENDER = {
+	MALE: 1,
+	FEMALE: 2,
+};
+
+const NEUTER_STATUS = {
+	YES: true,
+	NO: false,
+};
+
+const genderOption = [
+	{ id: GENDER.MALE, label: '남', containerStyle: { flex: 1 } },
+	{ id: GENDER.FEMALE, label: '여', containerStyle: { flex: 1 } },
+]
+
+const neuterOption = [
+	{ id: NEUTER_STATUS.YES, label: '했어요', containerStyle: { flex: 1 } },
+	{ id: NEUTER_STATUS.NO, label: '안했어요', containerStyle: { flex: 1 } },
+]
+
 export default function App() {
 	const [petInfo, setPetInfo] = useState({
 		type: 0,
 		name: "",
 		birthday: "",
-		breedType: 0,
 		breed: "",
 		weight: -1,
 		gender: 0,
-		neuter: 0,
+		neuter: null,
 	});
+
+	// 입력 필드의 유효성 상태
 	const [nameValid, setNameValid] = useState(true);
 	const [birthdayVaild, setBrithdayVaild] = useState(true);
 	const [breedVaild, setBreedVaild] = useState(true);
 	const [weightVaild, setWeightVaild] = useState(true);
+
+	// 입력 필드의 값
 	const [name, setName] = useState("");
 	const [birthday, setBirthday] = useState("");
 	const [breed, setBreed] = useState("");
 	const [weight, setWeight] = useState("");
-	const [state, setState] = useState(0);
+
+	const [breedSelection, setBreedSelection] = useState(null);
+
+	/*
+	입력 단계 상태를 관리하는 변수
+	0 ~ 7까지의 값을 가지며, 각 단계에서 필요한 입력 필드를 제어
+	*/
+	const [inputState, inputSetState] = useState(0);
 
 	useEffect(() => {
 		stateSelecter();
@@ -39,10 +74,13 @@ export default function App() {
 			petInfo.type !== 0,
 			petInfo.name !== "",
 			petInfo.birthday !== "",
-			(petInfo.breedType === 1 && petInfo.breed !== "") || petInfo.breedType === 2,
+			breedSelection !== null && (
+				(breedSelection === true && petInfo.breed !== "") ||
+				breedSelection === false
+			),
 			petInfo.weight !== -1,
 			petInfo.gender !== 0,
-			petInfo.neuter !== 0
+			petInfo.neuter !== null,
 		];
 	
 		for (let i = 0; i < conditions.length; i++) {
@@ -52,17 +90,15 @@ export default function App() {
 				break;
 		}
 
-		setState(newState);
+		inputSetState(newState);
 	}
 
 	const onPressGender = (gender) => {
 		setPetInfo(prevInfo => ({ ...prevInfo, gender }));
-		
 	};
 
 	const onPressNeuter = (neuter) => {
-		setPetInfo(prevInfo => ({ ...prevInfo, neuter }));
-		
+		setPetInfo(prevInfo => ({ ...prevInfo, neuter }))
 	};
 
 	const petTypeSelection = (type) => {
@@ -70,17 +106,25 @@ export default function App() {
 		
 	};
 
-	const petBreedTypeSelection = (breedType) => {
-		setPetInfo(prevInfo => ({...prevInfo, breedType }));
+	const petBreedTypeSelection = (knowsBreed) => {
+		if (!knowsBreed)
+			setBreedSelection(false);
+		else
+			setBreedSelection(true);
+		setBreed("");
+		setPetInfo(prevInfo => ({ ...prevInfo, breed: "" }));
+	}
+
+	// const petBreedTypeSelection = (breedType) => {
+	// 	setPetInfo(prevInfo => ({...prevInfo, breedType }));
 		
-		if (breedType === 1 && breed === "" && petInfo.breedType === 2)
-		{
-			setBreedVaild(false);
-			setPetInfo(prevInfo => ({ ...prevInfo, breed: "" }));
-			return;
-		}
-		
-	};
+	// 	if (breedType === 1 && breed === "" && petInfo.breedType === 2)
+	// 	{
+	// 		setBreedVaild(false);
+	// 		setPetInfo(prevInfo => ({ ...prevInfo, breed: "" }));
+	// 		return;
+	// 	}
+	// };
 
 	const checkPetName = () => {
 		if (name.length > 10 || name === "" || !REGEX_KOREAN.test(name)) {
@@ -90,10 +134,9 @@ export default function App() {
 		}
 		setNameValid(true);
 		setPetInfo(prevInfo => ({ ...prevInfo, name }));
-		
 	};
 
-	const checkVaildDate = ((dateString) => {
+	const checkValidDate = ((dateString) => {
 		const date = new Date(dateString);
 		const todayDate = new Date();
 		date.setHours(0, 0, 0, 0);
@@ -107,7 +150,7 @@ export default function App() {
 	const checkPetBirthday = () => {
 		if (birthday.length !== 8 ||
 			birthday === "" || !REGEX_NUMBER.test(birthday) ||
-			!checkVaildDate(birthday.replace(/(\d{4})(\d{2})(\d{2})/g, '$1-$2-$3')))
+			!checkValidDate(birthday.replace(/(\d{4})(\d{2})(\d{2})/g, '$1-$2-$3')))
 		{
 			setBrithdayVaild(false);
 			setPetInfo(prevInfo => ({...prevInfo, birthday: ""}));
@@ -128,7 +171,6 @@ export default function App() {
 		}
 		setBreedVaild(true);
 		setPetInfo(prevInfo => ({ ...prevInfo, breed }));
-		
 	};
 
 	const checkVaildWeight = (weight) => {
@@ -166,26 +208,16 @@ export default function App() {
 		setWeight(weight.replace("kg", "").trim());
 	};
 
-	const genderOption = [
-		{ id: 1, label: '남', containerStyle: { flex: 1 } },
-		{ id: 2, label: '여', containerStyle: { flex: 1 } },
-	]
-
-	const neuterOption = [
-		{ id: 1, label: '했어요', containerStyle: { flex: 1 } },
-		{ id: 2, label: '안했어요', containerStyle: { flex: 1 } },
-	]
-
 	const onPressNext = () => {
 		Alert.alert("확인",
 			`
-			종류 : ${petInfo.type === 1 ? "강아지" : "고양이"}
+			종류 : ${petInfo.type === PET_TYPE.DOG ? "강아지" : "고양이"}
 			이름 : ${petInfo.name}
 			생년월일 : ${petInfo.birthday}
-			${petInfo.breedType === 1 ? `품종 : ${petInfo.breed}` : ""}
+			${breedSelection === true ? `품종 : ${petInfo.breed}` : ""}
 			몸무게 : ${petInfo.weight}
-			성별 : ${petInfo.gender === 1 ? "남" : "여"}
-			중성화 여부 : ${petInfo.neuter === 1 ? "유" : "무"}
+			성별 : ${petInfo.gender === GENDER.MALE ? "남" : "여"}
+			중성화 여부 : ${petInfo.neuter ? "유" : "무"}
 			`.replace(/^\s*[\r\n]/gm, '')
 		);
 	};
@@ -211,23 +243,23 @@ export default function App() {
 					</Text>
 					<View style={styles.buttonContainer}>
 						<TouchableOpacity 
-							onPress={() => petTypeSelection(1)}
-							style={[petInfo.type === 1 ? styles.selectButton : styles.button, {marginRight: 10}]}>
-								<Text style={petInfo.type === 1 ? styles.selectButtonText : styles.buttonText}>
+							onPress={() => petTypeSelection(PET_TYPE.DOG)}
+							style={[petInfo.type === PET_TYPE.DOG ? styles.selectButton : styles.button, {marginRight: 10}]}>
+								<Text style={petInfo.type === PET_TYPE.DOG ? styles.selectButtonText : styles.buttonText}>
 									강아지
 								</Text>
 						</TouchableOpacity>
 						<TouchableOpacity
-							onPress={() => petTypeSelection(2)}
-							style={petInfo.type === 2 ? styles.selectButton : styles.button}>
-								<Text style={petInfo.type === 2 ? styles.selectButtonText : styles.buttonText}>
+							onPress={() => petTypeSelection(PET_TYPE.CAT)}
+							style={petInfo.type === PET_TYPE.CAT ? styles.selectButton : styles.button}>
+								<Text style={petInfo.type === PET_TYPE.CAT ? styles.selectButtonText : styles.buttonText}>
 									고양이
 								</Text>
 						</TouchableOpacity>
 					</View>
 				</View>
 
-				{(state >= 1) && (
+				{(inputState >= 1) && (
 					<View style={styles.petContainer}>
 						<Text style={styles.label}>
 							이름
@@ -244,7 +276,7 @@ export default function App() {
 					</View>
 				)}
 
-				{(state >= 2) && (
+				{(inputState >= 2) && (
 					<View style={styles.petContainer}>
 						<Text style={styles.label}>
 							생년월일
@@ -266,28 +298,28 @@ export default function App() {
 					</View>
 				)}
 
-				{(state >= 3) && (
+				{(inputState >= 3) && (
 					<View style={styles.petContainer}>
 						<Text style={styles.label}>
 							품종
 						</Text>
 						<View style={styles.buttonContainer}>
 							<TouchableOpacity
-								onPress={() => petBreedTypeSelection(1)}
-								style={[petInfo.breedType === 1 ? styles.selectButton : styles.button, {marginRight: 10}]}>
-									<Text style={petInfo.breedType === 1 ? styles.selectButtonText : styles.buttonText}>
+								onPress={() => petBreedTypeSelection(true)}
+								style={[breedSelection === true ? styles.selectButton : styles.button, {marginRight: 10}]}>
+									<Text style={breedSelection === true ? styles.selectButtonText : styles.buttonText}>
 										품종 알아요
 									</Text>
 							</TouchableOpacity>
 							<TouchableOpacity
-								onPress={() => petBreedTypeSelection(2)}
-								style={[petInfo.breedType === 2 ? styles.selectButton : styles.button]}>
-									<Text style={petInfo.breedType === 2 ? styles.selectButtonText : styles.buttonText}>
+								onPress={() => petBreedTypeSelection(false)}
+								style={[breedSelection === false ? styles.selectButton : styles.button]}>
+									<Text style={breedSelection === false ? styles.selectButtonText : styles.buttonText}>
 										품종 몰라요
 									</Text>
 							</TouchableOpacity>
 						</View>
-						{(petInfo.breedType === 1) && (
+						{(breedSelection === true) && (
 							<TextInput
 								style={{...styles.input, borderBottomColor: breedVaild ? "#ccc" : "red"}}
 								placeholder={"품종을 입력해주세요."}
@@ -301,7 +333,7 @@ export default function App() {
 					</View>
 				)}
 
-				{(state >= 4) && (
+				{(inputState >= 4) && (
 					<View style={styles.petContainer}>
 						<Text style={styles.label}>
 							몸무게
@@ -321,7 +353,7 @@ export default function App() {
 					</View>
 				)}
 
-				{(state >= 5) && (
+				{(inputState >= 5) && (
 					<View style={styles.petContainer}>
 						<Text style={styles.label}>
 							성별
@@ -337,7 +369,7 @@ export default function App() {
 					</View>
 				)}
 
-				{(state >= 6) && (
+				{(inputState >= 6) && (
 					<View style={styles.petContainer}>
 					<Text style={styles.label}>
 						중성화 여부
@@ -353,7 +385,7 @@ export default function App() {
 				</View>
 				)}
 
-				{(state === 7) && (
+				{(inputState === 7) && (
 					<View style={styles.petContainer}>
 						<TouchableOpacity
 							style={{...styles.button, borderColor: 'black'}}
