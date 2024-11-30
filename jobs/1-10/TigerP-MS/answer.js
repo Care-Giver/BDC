@@ -1,9 +1,11 @@
 console.log("프로그램 실행");
+let globalData = null;
 
 // 비동기로 데이터 (mock.json) 가져오고 처리하기
 fetch("./mock.json")
   .then((response) => response.json()) // 응답을 JSON으로 변환
   .then((data) => {
+    globalData = data;
     const serviceNames = getServiceNames(data.visitingServices);
     console.log(serviceNames);
 
@@ -56,7 +58,7 @@ function showResult(serviceNames, newestService, filteredServicesName, filteredS
   '</div>';
 
   // console.log(getfilteredServicesNameInputValue());
-  // getfilteredServicesNameInputValue(data); 작동 x
+  getfilteredServicesNameInputValue(data);
 
   const filteredServicesNameContainer = document.getElementById('filteredServicesName');
   filteredServicesNameContainer.innerHTML = '';
@@ -110,35 +112,57 @@ function showResult(serviceNames, newestService, filteredServicesName, filteredS
   )
 }
 
-// function getfilteredServicesNameInputValue()
-// {
-//   const inputElement = document.getElementById('filteredServicesNameSerch').value;
-//   return inputElement;
-// }
+function getfilteredServicesNameInputValue(data)
+{
+  const inputElement = document.getElementById('filteredServicesNameSerch').value;
+  const filteredServicesName = filterServicesByName(
+    data.visitingServices,
+    inputElement
+  );
+  const visitingServicesContainer = document.getElementById('filteredServicesName');
+    visitingServicesContainer.innerHTML = '';
+    filteredServicesName.forEach(service =>
+      {
+        const serviceElement = document.createElement('div');
+        serviceElement.innerHTML +=
+        '<div class="bg-gray-200 p-4 rounded">' +
+        `<p>Id: ${service.id}</p>` +
+        `<p>CreateAt: ${service.createAt}</p>` +
+        `<p>UpdateAt: ${service.updatedAt}</p>` +
+        `<p>Name: ${service.name}</p>` +
+        `<p>Description: ${service.desc}</p>` +
+        '</div>';
+        visitingServicesContainer.appendChild(serviceElement);
+      }
+    )
+}
 
-// function getfilteredServicesNameInputValue(data)
-// {
-//   const filteredServicesName = filterServicesByName(
-//     data.visitingServices,
-//     inputElement
-//   );
-//   const visitingServicesContainer = document.getElementById('filteredServicesName');
-//     visitingServicesContainer.innerHTML = '';
-//     filteredServicesName.forEach(service =>
-//       {
-//         const serviceElement = document.createElement('div');
-//         serviceElement.innerHTML +=
-//         '<div class="bg-gray-200 p-4 rounded">' +
-//         `<p>Id: ${service.id}</p>` +
-//         `<p>CreateAt: ${service.createAt}</p>` +
-//         `<p>UpdateAt: ${service.updatedAt}</p>` +
-//         `<p>Name: ${service.name}</p>` +
-//         `<p>Description: ${service.desc}</p>` +
-//         '</div>';
-//         visitingServicesContainer.appendChild(serviceElement);
-//       }
-//     )
-// }
+function getfilteredServicesKeywordInputValue(data)
+{
+  const inputElement = document.getElementById('filteredServicesKeywordSerch').value;
+  const filteredServicesKeyword = searchServicesByKeyword(
+    data.visitingServices,
+    inputElement
+  )
+  const filteredServicesKeywordContainer = document.getElementById('filteredServicesKeyword');
+  filteredServicesKeywordContainer.innerHTML = '';
+  console.log(filteredServicesKeyword);
+  filteredServicesKeyword.forEach(service =>
+    {
+      const serviceElement = document.createElement('div');
+      serviceElement.innerHTML +=
+      '<div class="bg-gray-200 p-4 rounded">' +
+      `<p>Id: ${service.id}</p>` +
+      `<p>CreateAt: ${service.createAt}</p>` +
+      `<p>UpdateAt: ${service.updatedAt}</p>` +
+      `<p>Name: ${service.name}</p>` +
+      `<p>Description: ${service.desc}</p>` +
+      '</div>';
+      filteredServicesKeywordContainer.appendChild(serviceElement);
+    }
+  )
+}
+
 
 /**
  * Challenge 1: name 프로퍼티의 값들만 얻어내기.
